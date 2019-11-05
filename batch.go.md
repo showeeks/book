@@ -1,7 +1,5 @@
 # Buffer.go
 
-
-
 定义一个缓存池，新建一个 sync.Pool 对象配置 New 属性即可。
 
 这里就可以看出 var, make 和 new 的区别。
@@ -26,13 +24,22 @@ func newBuffer() *byte.Buffer {
 }
 ```
 
-调用 sync.Pool 的 get 来获取池中对象。因为 `.get` 的类型被擦除了，因此要重新设置类型。
+因为 `.get` 的类型被擦除了，因此要重新设置类型。从池中取出一个 buffer 对象。
 
 ```go
 func acquireBuffer() *byte.Buffer {
-    return bufferPool.get().(*bytes.Buffer)
+    return bufferPool.Get().(*bytes.Buffer)
 }
 ```
 
+释放 buffer 的话首先要释放掉 buffer 中的内容，然后再将 buffer 重新放回缓冲池中。
 
+```go
+func releaseBuffer(b *bytes.Buffer) {
+    if b!= nil {
+        b.Reset()
+        bufferPool.Put(b)
+    }
+}
+```
 
