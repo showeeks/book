@@ -17,3 +17,24 @@ type Client struct {
 }
 ```
 
+Client 的配置
+
+```go
+type ClientConfig struct {
+    Brokers []string
+    Dialer *Dialer
+}
+```
+
+我们希望将 Topic 和 Group 作为一个整体作为函数参数提交给 Client API。
+
+{% hint style="danger" %}
+这个结构体未来可能会变化。
+{% endhint %}
+
+```go
+type TopicAndGroup struct {
+    Topic string
+    GroupId string
+}
+```
